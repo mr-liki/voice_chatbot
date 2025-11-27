@@ -119,7 +119,7 @@ recognition.onresult = async (event) => {
     tempUserBubble.textContent = finalText;
     tempUserBubble = null;
 
-    const response = await fetch("http://127.0.0.1:8000/chat", {
+    const response = await fetch("https://voice-chatbot-269z.onrender.com/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: finalText })
