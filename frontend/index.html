@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voice Chatbot</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 🔹 Start Screen -->
+  <div id="start-screen" class="start-screen">
+    <h2>Welcome to Voice bot</h2>
+    <p>Click below to begin chatting with the Voice Bot.</p>
+    <button id="start-btn" class="start-btn">▶ Start Voice Chat</button>
+  </div>
+
+  <!-- 🔹 Chat UI -->
+  <div id="chat-container" class="container" style="display:none;">
+    <h2>Voice ChatBot</h2>
+
+    <div id="chat-box"></div>
+
+    <button id="voice-btn" class="voice-btn">Tap To Speak</button>
+  </div>
+
+  <!-- 🔔 Warning box placed BEFORE the script so JS can find it -->
+  <div id="warning-box" class="warning-box hide">Failed to recognize, please say clearly and loudly</div>
+
+  <script src="script.js"></script>
+</body>
+</html>

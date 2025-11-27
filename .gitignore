@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.log
+
+# Virtual Environment
+venv/
+.env
+.env*/
+
+/# FastAPI cache
+.idea/
+*.sqlite3
+
+# Node / Frontend (if any config later)
+node_modules/
+dist/
+build/
+.cache/
+
+# General
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.bak
+*.tmp
+
+# Mac OS
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+logs/
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Coverage / Testing
+.coverage
+htmlcov/
+pytest_cache/
+
+# Deployment
+*.env.production
+*.env.local
+*.env.development

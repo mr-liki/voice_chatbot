@@ -1,0 +1,99 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f4f4f4;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  width: 90%;
+  max-width: 450px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+#chat-box {
+  height: 350px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+.message {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.user {
+  background: #d1e7ff;
+  text-align: right;
+}
+
+.bot {
+  background: #e9ffe8;
+  text-align: left;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 8px;
+}
+
+#chat-container {
+  display: none;
+  opacity: 0;
+}
+
+#start-screen {
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+
+/* 🔔 Floating Warning Box (Top Toast Notification) */
+.warning-box {
+  position: fixed;
+  top: -80px; /* hidden above screen */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4d4d;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  font-size: 14px;
+  font-weight: 600;
+  transition: top 0.5s cubic-bezier(.2,.8,.2,1), opacity 0.5s ease;
+  opacity: 0;
+  z-index: 9999;
+  max-width: 90%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none; /* non-interactive toast */
+}
+
+/* visible state */
+.warning-box.show {
+  top: 22px; /* visible position */
+  opacity: 1;
+}
+
+/* hidden state (back up) */
+.warning-box.hide {
+  top: -80px; /* slide back up */
+  opacity: 0;
+}
