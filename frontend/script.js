@@ -16,8 +16,10 @@ const recognition = new SpeechRecognition();
 recognition.lang = 'en-GB';
 recognition.interimResults = true;
 recognition.maxAlternatives = 3;
+recognition.continuous = false; // 🛑 force single-response listening
 
 let tempUserBubble = null;
+let recognitionTimeout = null;
 
 // 🎯 Start Chat Session with Smooth Animation
 startBtn.addEventListener('click', () => {
@@ -47,6 +49,11 @@ startBtn.addEventListener('click', () => {
 voiceBtn.addEventListener('click', () => {
   if (!chatStarted) return;
   recognition.start();
+
+  // ⏳ Safety timeout — stop if stuck
+  recognitionTimeout = setTimeout(() => {
+    recognition.stop();
+  }, 8000); // Stops after 8 sec if stuck
 });
 
 // UI Feedback
@@ -54,11 +61,17 @@ recognition.onstart = () => {
   voiceBtn.innerText = "Listening...";
 };
 
-recognition.onend = () => {
-  voiceBtn.innerText = "Tap to Speak";
+// 🛑 Smart auto-stop when user finishes speaking
+recognition.onspeechend = () => {
+  recognition.stop();
 };
 
-// 🚨 Custom Animated Warning Function (Fixed animation)
+recognition.onend = () => {
+  voiceBtn.innerText = "Tap to Speak";
+  clearTimeout(recognitionTimeout);
+};
+
+// 🚨 Custom Animated Warning Function
 function showWarning(message) {
   if (!warningBox) {
     console.warn("Warning box not found in DOM:", message);
@@ -66,17 +79,14 @@ function showWarning(message) {
   }
 
   warningBox.textContent = message;
-  // Ensure correct classes
   warningBox.classList.remove("hide");
-  // Force reflow to reset animation if needed
-  // eslint-disable-next-line no-unused-expressions
-  warningBox.offsetHeight;
+  warningBox.offsetHeight; // reset animation
   warningBox.classList.add("show");
 
   setTimeout(() => {
     warningBox.classList.remove("show");
     warningBox.classList.add("hide");
-  }, 2200); // Stays visible before disappearing
+  }, 2200);
 }
 
 // 🛑 Handle speech recognition failure
@@ -137,7 +147,6 @@ function addMessage(message, sender) {
   const msgDiv = document.createElement('div');
   msgDiv.classList.add('message', sender);
 
-  // Fade-in effect for new messages
   msgDiv.style.opacity = "0";
   msgDiv.textContent = message;
   chatBox.appendChild(msgDiv);
@@ -156,11 +165,9 @@ function speakText(text) {
   speech.rate = 1;
   speech.volume = 1;
 
-  // Disable Tap to Speak button while bot is speaking
   voiceBtn.disabled = true;
   voiceBtn.innerText = "⏳ Bot is speaking...";
 
-  // Re-enable after speech ends
   speech.onend = () => {
     voiceBtn.disabled = false;
     voiceBtn.innerText = "Tap to Speak";
