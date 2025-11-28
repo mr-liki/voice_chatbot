@@ -6,7 +6,7 @@ const chatBox = document.getElementById('chat-box');
 const startBtn = document.getElementById('start-btn');
 const startScreen = document.getElementById('start-screen');
 const chatContainer = document.getElementById('chat-container');
-const warningBox = document.getElementById('warning-box'); // 🔔 Added warning box reference
+const warningBox = document.getElementById('warning-box');
 let chatStarted = false;
 
 // Speech Recognition Setup
@@ -16,10 +16,11 @@ const recognition = new SpeechRecognition();
 recognition.lang = 'en-GB';
 recognition.interimResults = true;
 recognition.maxAlternatives = 3;
-recognition.continuous = false; // 🛑 force single-response listening
+recognition.continuous = false;
 
 let tempUserBubble = null;
 let recognitionTimeout = null;
+let isFirstRequest = true; // 🔹 Added this flag
 
 // 🎯 Start Chat Session with Smooth Animation
 startBtn.addEventListener('click', () => {
@@ -50,10 +51,9 @@ voiceBtn.addEventListener('click', () => {
   if (!chatStarted) return;
   recognition.start();
 
-  // ⏳ Safety timeout — stop if stuck
   recognitionTimeout = setTimeout(() => {
     recognition.stop();
-  }, 8000); // Stops after 8 sec if stuck
+  }, 8000);
 });
 
 // UI Feedback
@@ -73,14 +73,11 @@ recognition.onend = () => {
 
 // 🚨 Custom Animated Warning Function
 function showWarning(message) {
-  if (!warningBox) {
-    console.warn("Warning box not found in DOM:", message);
-    return;
-  }
+  if (!warningBox) return;
 
   warningBox.textContent = message;
   warningBox.classList.remove("hide");
-  warningBox.offsetHeight; // reset animation
+  warningBox.offsetHeight;
   warningBox.classList.add("show");
 
   setTimeout(() => {
@@ -129,6 +126,12 @@ recognition.onresult = async (event) => {
     tempUserBubble.textContent = finalText;
     tempUserBubble = null;
 
+    // 🔹 First request handling - show waking animation
+    if (isFirstRequest) {
+      voiceBtn.disabled = true;
+      voiceBtn.innerHTML = `<span class="loader"></span> Waking up...`;
+    }
+
     const response = await fetch("https://voice-chatbot-269z.onrender.com/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -138,6 +141,12 @@ recognition.onresult = async (event) => {
     const data = await response.json();
     const botMessage = data.response;
     addMessage(botMessage, 'bot');
+
+    // 🔹 After first response, reset for normal behavior
+    if (isFirstRequest) {
+      isFirstRequest = false;
+    }
+
     speakText(botMessage);
   }
 };
